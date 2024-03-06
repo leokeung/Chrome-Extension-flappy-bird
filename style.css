@@ -1,0 +1,17 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f2f2f2;
+}
+
+.pokemon-ball {
+    cursor: pointer;
+    margin: 10px;
+}
+
+.pokemon-image {
+    display: none;
+    width: 200px;
+}
