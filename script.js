@@ -29,12 +29,14 @@ pokemon.style.top = containerHeight / 2 + "px"; //pokemonY
 
 //Count position by jumping
 //Pokemon axis-x remain unchange, only axis-y change when press 'space'
-let pokemonPosition = containerHeight / 2;
+let pokemonPositionY = containerHeight / 2;
+
 
 //Pipe
-/* const pipe = document.querySelectorAll('.pipe')
-pipe.forEach(el => el.width = '45');
-let pipeHeight; */
+const pipeWidth = 64;
+const pipeHeight = 512;
+const opening = containerHeight / 4;
+let pipeArray = [];
 
 //Constant number
 const jumping = 40; //pokemon jump height
@@ -47,7 +49,11 @@ let score = 0;
 let downing; //Function setInterval
 
 function game() {
+
   move();
+
+  setInterval(createPipe, 1500)
+  requestAnimationFrame(placePipe)
 }
 game();
 
@@ -60,31 +66,87 @@ function move() {
   document.body.addEventListener("keypress", keypress);
 
   //Apply gravity to Pokemon
-  downing = setInterval(function () {
-    pokemonPosition += gravity;
-    pokemon.style.top = pokemonPosition + "px";
-    detect(pokemonPosition);
+  downing = setInterval(function() {
+    pokemonPositionY += gravity;
+    pokemon.style.top = pokemonPositionY + "px";
+    detect(pokemonPositionY);
   }, 10);
+
+
+
 }
 
 //Press 'space' or 'x' to jump
 function keypress(e) {
   if (e.key == "x" || e.key == "X" || e.code == "Space") {
-    pokemonPosition -= jumping;
-    pokemon.style.top = pokemonPosition;
+    pokemonPositionY -= jumping;
+    pokemon.style.top = pokemonPositionY;
   }
 }
 
 //Press up, icon face-up
 //Press release, icon face-return
 
+//Create each set of pipe
+function createPipe() {
+  if (!gameStatus) {
+    return;
+  }
+  //Create pipe by random height
+  let randomPipe = containerHeight - containerHeight / 6 - Math.random() * (containerHeight / 2);
+
+  //Pipe default position
+  const pipeTop = document.createElement('div');
+  pipeTop.className = 'pipe';
+  pipeTop.style.position = 'absolute'
+  pipeTop.style.top = 0 + 'px';
+  pipeTop.style.left = containerWidth + 'px';
+  pipeTop.style.width = pipeWidth + 'px';
+  pipeTop.style.height = randomPipe + 'px';
+  container.appendChild(pipeTop);
+  pipeArray.push(pipeTop);
+
+  const pipeBottom = document.createElement('div');
+  pipeBottom.className = 'pipe';
+  pipeBottom.style.position = 'absolute';
+  pipeBottom.style.bottom = '0' + 'px';
+  pipeBottom.style.left = containerWidth + 'px';
+  pipeBottom.style.width = pipeWidth + 'px';
+  pipeBottom.style.height = containerHeight - randomPipe - opening + 'px';
+  container.appendChild(pipeBottom);
+  pipeArray.push(pipeBottom);
+}
+
+//Place pipes to game by for-loop
+function placePipe() {
+  if (!gameStatus) {
+    return;
+  }
+  requestAnimationFrame(placePipe)
+  for (let i = 0; i < pipeArray.length; i++) {
+    let pipe = pipeArray[i];
+    let pipeX = parseInt(pipe.style.left);
+    pipeX += moving;
+    pipe.style.left = pipeX + 'px';
+
+    //Clear pipe after screen
+    if (pipeArray.length > 0 && parseFloat(pipe.style.left) < -pipeWidth) {
+      pipeArray.shift();
+      pipe.remove();
+      i--;
+    }
+
+    console.log(pipeArray.length); //Test 
+  }
+
+}
+
 //Define gameover
-function detect(pokemonPosition) {
-  console.log(pokemonPosition); //Test
+function detect(pokemonPositionY) {
   //Pokemon out of container
   if (
-    pokemonPosition + pokemon.width > containerHeight ||
-    pokemonPosition < 0
+    pokemonPositionY + pokemon.height > containerHeight ||
+    pokemonPositionY < 0
   ) {
     gameover();
   }
@@ -100,28 +162,13 @@ function gameover() {
   return;
 }
 
-function afterGame() {
+function endGame() {
   //Fetch'facts' API to show facts
   //Return menu button
   //Chose another pokemon button
   //Resatrt with same pokemon button
 }
 
-//Pipe
-const pipe = document.querySelectorAll(".pipe");
-pipe.forEach((el) => (el.width = "45"));
-let pipeHeight;
-let pipeArray = [];
-
-//Create each set of pipe
-function createPipe() {
-  //Create pipe by random height
-}
-
-//Place pipes to game by for-loop
-function placePipe() {
-  //Clear pipe after screen
-}
 
 function advanceMode() {
   //if score to some points, next level. Change background / Pokemon / Pipe / Speed / Opening

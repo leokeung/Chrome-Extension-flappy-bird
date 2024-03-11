@@ -3,18 +3,22 @@ html {
   width: 100%;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
 #container {
   margin: auto;
-
-  /* display: flex;
-    justify-content: center;
-    align-items: center; */
-
+  position: relative;
   background-color: green;
-  /* border-color: black;
-    border-style: solid; */
+}
+
+#pokemon {
+  background-color: white;
 }
 
 .pipe {
   background-color: black;
+  overflow: hidden;
 }
