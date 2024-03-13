@@ -26,9 +26,10 @@ function game() {
 
   //Pipe
   const pipeWidth = 64;
-  const pipeHeight = 512;
+  const pipeHeight = 512; //useless?
   const opening = containerHeight / 4;
-  let pipeArray = [];
+  let pipeTopArray = [];
+  let pipeBottomArray = [];
 
   //Constant number
   const jumping = 40; //pokemon jump height
@@ -68,9 +69,6 @@ function game() {
     }
   }
 
-  //Press up, icon face-up
-  //Press release, icon face-return
-
   //Create each set of pipe
   function createPipe() {
     if (!gameStatus) {
@@ -91,7 +89,7 @@ function game() {
     pipeTop.style.width = pipeWidth + "px";
     pipeTop.style.height = randomPipe + "px";
     container.appendChild(pipeTop);
-    pipeArray.push(pipeTop);
+    pipeTopArray.push(pipeTop);
 
     const pipeBottom = document.createElement("div");
     pipeBottom.className = "pipe";
@@ -101,31 +99,42 @@ function game() {
     pipeBottom.style.width = pipeWidth + "px";
     pipeBottom.style.height = containerHeight - randomPipe - opening + "px";
     container.appendChild(pipeBottom);
-    pipeArray.push(pipeBottom);
+    pipeBottomArray.push(pipeBottom);
   }
 
   //Place pipes to game by for-loop
   function placePipe() {
+    requestAnimationFrame(placePipe);
     if (!gameStatus) {
       return;
     }
-    requestAnimationFrame(placePipe);
-    for (let i = 0; i < pipeArray.length; i++) {
-      let pipe = pipeArray[i];
-      let pipeX = parseFloat(pipe.style.left);
+
+    for (let i = 0; i < pipeTopArray.length; i++) {
+      let pipeTop = pipeTopArray[i];
+      let pipeBottom = pipeBottomArray[i];
+      let pipeX = parseFloat(pipeBottom.style.left);
       pipeX += moving;
-      pipe.style.left = pipeX + "px";
+      pipeTop.style.left = pipeX + "px";
+      pipeBottom.style.left = pipeX + "px";
 
       //Clear pipe after screen
-      if (pipeArray.length > 0 && parseFloat(pipe.style.left) < -pipeWidth) {
-        pipeArray.shift();
-        pipe.remove();
+      if (
+        pipeBottom.length > 0 &&
+        parseFloat(pipeBottom.style.left) < -pipeWidth
+      ) {
+        pipeTop.shift();
+        pipeBottom.shift();
+        pipeTop.remove();
+        pipeBottom.remove();
         i--;
       }
       detect(pokemonPositionY);
       /* console.log(parseInt(pipeTop.style.height)); //Test  */
     }
   }
+
+  //Clear pipe after screen
+  function clearPipe() {}
 
   //Define gameover
   function detect(pokemonPositionY) {
@@ -138,27 +147,29 @@ function game() {
     }
 
     //Pokemon hit pipe
-    for (let i = 0; i < pipeArray.length; i += 2) {
-      let pipeTop = pipeArray[i];
-      let pipeBottom = pipeArray[i + 1];
+    for (let i = 0; i < pipeBottomArray.length; i += 2) {
+      let pipeTop = pipeTopArray[i];
+      let pipeBottom = pipeBottomArray[i];
 
       if (!pipeTop || !pipeBottom) {
         continue; // Skip to the next iteration if the pipe elements are undefined or null
       }
 
-      let pipeTopHeight = parseFloat(pipeTop.style.height);
-      let pipeBottomTop = parseFloat(pipeBottom.style.top);
-      let pipeX = parseFloat(pipeTop.style.left);
-      let pokemonX = parseFloat(pokemon.style.left);
+      let pipeTopY = parseFloat(pipeTop.style.height); //pipeTopY
+      let pipeBottomY = containerHeight - parseFloat(pipeBottom.style.height); //pipeBottomY
+      let pipeX = parseFloat(pipeTop.style.left); //pipeX
+
       let pokemonTop = pokemonPositionY;
       let pokemonBottom = pokemonPositionY + pokemon.height;
+      let pokemonX = parseFloat(pokemon.style.left);
 
       if (
-        (pokemonTop < pipeTopHeight ||
-          pokemonBottom > containerHeight - pipeBottomTop ||
-          pokemonBottom < containerHeight - pipeBottomTop + opening) &&
-        pokemonX + pokemon.width > pipeX &&
-        pokemonX < pipeX + pipeWidth
+        /* (pokemonTop < pipeTopY ||
+          pokemonBottom > containerHeight - pipeBottomY ||
+          pokemonBottom < containerHeight - pipeBottomY + opening) */
+        (pokemonTop < pipeTopY || pokemonBottom > pipeBottomY) &&
+        pokemonX + pokemon.width > pipeX && //part of pokemon inside the pipe
+        pokemonX < pipeX + pipeWidth // part of pokemon outside the pipe
       ) {
         gameover();
       }
@@ -181,4 +192,3 @@ function game() {
     //Resatrt with same pokemon button
   }
 }
-game();
