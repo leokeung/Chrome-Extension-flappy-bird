@@ -11,16 +11,16 @@ html {
 #container {
   margin: auto;
   position: relative;
-  background-color: green;
-  display: flex;
+  background-color: green; /* Wait to change */
+  display: relative;
 }
 
 #pokemon {
-  background-color: white;
+  background-color: white; /* Wait to change */
   position: absolute;
 }
 
 .pipe {
-  background-color: black;
+  background-color: black; /* Wait to change */
   position: absolute;
 }

@@ -16,13 +16,9 @@ function game() {
   pokemon.width = containerWidth / 9;
 
   //Pokemon default position
-
   pokemon.style.left = containerWidth / 8 + "px"; //pokemonX
-  pokemon.style.top = containerHeight / 2 + "px"; //pokemonY
-
-  //Count position by jumping
-  //Pokemon axis-x remain unchange, only axis-y change when press 'space'
   let pokemonPositionY = containerHeight / 2;
+  pokemon.style.top = pokemonPositionY + "px"; //pokemonY
 
   //Pipe
   const pipeWidth = 64;
@@ -32,7 +28,7 @@ function game() {
 
   //Constant number
   const jumping = 40; //pokemon jump height
-  const gravity = 0.4; //If nothing press, Pokemon fall down as gravity
+  const gravity = 0.6; //If nothing press, Pokemon fall down as gravity
   const moving = -2; //Pipe moving speed
 
   //Status
