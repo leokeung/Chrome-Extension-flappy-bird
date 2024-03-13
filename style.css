@@ -12,13 +12,15 @@ html {
   margin: auto;
   position: relative;
   background-color: green;
+  display: flex;
 }
 
 #pokemon {
   background-color: white;
+  position: absolute;
 }
 
 .pipe {
   background-color: black;
-  overflow: hidden;
+  position: absolute;
 }

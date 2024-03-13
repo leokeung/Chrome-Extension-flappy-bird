@@ -16,7 +16,7 @@ function game() {
   pokemon.width = containerWidth / 9;
 
   //Pokemon default position
-  pokemon.style.position = "absolute";
+
   pokemon.style.left = containerWidth / 8 + "px"; //pokemonX
   pokemon.style.top = containerHeight / 2 + "px"; //pokemonY
 
@@ -26,7 +26,6 @@ function game() {
 
   //Pipe
   const pipeWidth = 64;
-  const pipeHeight = 512; //useless?
   const opening = containerHeight / 4;
   let pipeTopArray = [];
   let pipeBottomArray = [];
@@ -77,13 +76,13 @@ function game() {
     //Create pipe by random height
     let randomPipe =
       containerHeight -
-      containerHeight / 6 -
+      containerHeight / 3 -
       Math.random() * (containerHeight / 2);
 
     //Pipe default position
     const pipeTop = document.createElement("div");
     pipeTop.className = "pipe";
-    pipeTop.style.position = "absolute";
+
     pipeTop.style.top = 0 + "px";
     pipeTop.style.left = containerWidth + "px";
     pipeTop.style.width = pipeWidth + "px";
@@ -93,7 +92,7 @@ function game() {
 
     const pipeBottom = document.createElement("div");
     pipeBottom.className = "pipe";
-    pipeBottom.style.position = "absolute";
+
     pipeBottom.style.bottom = "0" + "px";
     pipeBottom.style.left = containerWidth + "px";
     pipeBottom.style.width = pipeWidth + "px";
@@ -118,25 +117,19 @@ function game() {
       pipeBottom.style.left = pipeX + "px";
 
       //Clear pipe after screen
-      if (
-        pipeBottom.length > 0 &&
-        parseFloat(pipeBottom.style.left) < -pipeWidth
-      ) {
-        pipeTop.shift();
-        pipeBottom.shift();
+      if (pipeBottomArray.length > 0 && pipeX < 0) {
         pipeTop.remove();
         pipeBottom.remove();
+        pipeTopArray.splice(i, 1);
+        pipeBottomArray.splice(i, 1);
         i--;
       }
+
+      //Define gameover
       detect(pokemonPositionY);
-      /* console.log(parseInt(pipeTop.style.height)); //Test  */
     }
   }
 
-  //Clear pipe after screen
-  function clearPipe() {}
-
-  //Define gameover
   function detect(pokemonPositionY) {
     //Pokemon out of container
     if (
@@ -147,13 +140,9 @@ function game() {
     }
 
     //Pokemon hit pipe
-    for (let i = 0; i < pipeBottomArray.length; i += 2) {
+    for (let i = 0; i < pipeBottomArray.length; i++) {
       let pipeTop = pipeTopArray[i];
       let pipeBottom = pipeBottomArray[i];
-
-      if (!pipeTop || !pipeBottom) {
-        continue; // Skip to the next iteration if the pipe elements are undefined or null
-      }
 
       let pipeTopY = parseFloat(pipeTop.style.height); //pipeTopY
       let pipeBottomY = containerHeight - parseFloat(pipeBottom.style.height); //pipeBottomY
@@ -164,9 +153,6 @@ function game() {
       let pokemonX = parseFloat(pokemon.style.left);
 
       if (
-        /* (pokemonTop < pipeTopY ||
-          pokemonBottom > containerHeight - pipeBottomY ||
-          pokemonBottom < containerHeight - pipeBottomY + opening) */
         (pokemonTop < pipeTopY || pokemonBottom > pipeBottomY) &&
         pokemonX + pokemon.width > pipeX && //part of pokemon inside the pipe
         pokemonX < pipeX + pipeWidth // part of pokemon outside the pipe
@@ -182,7 +168,6 @@ function game() {
     gameStatus = false;
     clearInterval(downing);
     document.body.removeEventListener("keypress", keypress);
-    return;
   }
 
   function endGame() {
