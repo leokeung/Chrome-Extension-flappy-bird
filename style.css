@@ -3,7 +3,7 @@ html {
   width: 100%;
 }
 
-.container {
+.meunContainer {
   width: 360px;
   height: 640px;
   margin: auto;
@@ -51,4 +51,18 @@ html {
   border-style: solid;
   position: relative;
   top: 150px;
+}
+
+/* #pokemon {
+  /* background-color: white; */
+/* } */
+
+.pipe {
+  background-color: green;
+}
+
+#container {
+  margin: auto;
+  position: relative;
+  background-image: url("flappybirdbg.png");
 }
