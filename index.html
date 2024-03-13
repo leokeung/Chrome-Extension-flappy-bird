@@ -1,34 +1,24 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Pokemon Ball Game</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
-  </head>
-  <body>
-    <div class="container">
-      <img class="pokemon-image" id="pokemonImage" alt="pokemon" />
-      <img
-        class="pokemon-ball"
-        src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png
-        "
-        alt="pokeball"
-        onclick="selectRandomPokemon()"
-      />
-      <img
-        class="pokemon-ball"
-        src="https://archives.bulbagarden.net/media/upload/b/bf/Dream_Great_Ball_Sprite.png
-        "
-        alt="greatball"
-        onclick="selectRandomPokemon()"
-      />
-      <img
-        class="pokemon-ball"
-        src="https://archives.bulbagarden.net/media/upload/a/a8/Dream_Ultra_Ball_Sprite.png
-        "
-        alt="ultraball"
-        onclick="selectRandomPokemon()"
-      />
+
+<head>
+  <title>Flappy Pokemon Game</title>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body>
+  <div class="container" id='container''>
+    <div class="title"></div>
+    <div class="Allpokeballs">
+      <img class="pokemon-ball" src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png
+        " alt="pokeball"/>
+      <img class="pokemon-ball" src="https://archives.bulbagarden.net/media/upload/b/bf/Dream_Great_Ball_Sprite.png
+        " alt="greatball"/>
+      <img class="pokemon-ball" src="https://archives.bulbagarden.net/media/upload/a/a8/Dream_Ultra_Ball_Sprite.png
+        " alt="ultraball"/>
     </div>
-    <script src="script.js"></script>
-  </body>
+  </div>
+  <script src="script.js"></script>
+</body>
+
 </html>
