@@ -64,11 +64,6 @@ html {
   background-image: url("flappybirdbg.png");
 }
 
-#pokemon {
-  background-color: white; /* Wait to change */
-  position: absolute;
-}
-
 #score {
   position: absolute;
   font-size: 48px;
