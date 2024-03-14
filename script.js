@@ -91,7 +91,7 @@ function game() {
   pokemon.style.top = pokemonPositionY + "px"; //pokemonY
 
   //Pipe
-  const pipeWidth = 64;
+  const pipeWidth = 35;
   const opening = containerHeight / 4;
   let pipeTopArray = [];
   let pipeBottomArray = [];
