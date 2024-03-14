@@ -1,9 +1,77 @@
 document.addEventListener("DOMContentLoaded", function () {
-  game();
+  menu();
 });
+
+function menu() {
+  gameContainer.style.display = "none";
+  addTitle();
+  const pokemonBallImages = document.querySelectorAll(".pokemon-ball");
+  pokemonBallImages.forEach((el) => {
+    el.addEventListener("click", (e) => {
+      document.querySelector(".Allpokeballs").remove();
+      fetchRandomPokemon();
+      // Remove the event listeners from Pokémon ball images
+      pokemonBallImages.forEach((el) => {
+        el.removeEventListener("click", e);
+      });
+
+      // Add the start button
+      addStartBtn();
+    });
+  });
+}
+
+function fetchRandomPokemon() {
+  const pokemonBallImages = document.getElementsByClassName("pokemon-ball");
+  for (let i = 0; i < pokemonBallImages.length; i++) {
+    pokemonBallImages[i].style.display = "none";
+  }
+
+  const apiUrl = "https://pokeapi.co/api/v2/pokemon/";
+  const randomPokemonId = Math.floor(Math.random() * 898) + 1;
+
+  fetch(apiUrl + randomPokemonId)
+    .then((response) => response.json())
+    .then((data) => {
+      const pokemonImage = document.createElement("img");
+      pokemonImage.id = "pokemonImage";
+      pokemonImage.src = data.sprites.front_default;
+      pokemonImage.style.display = "inline-block";
+      meunContainer.appendChild(pokemonImage);
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+    });
+}
+
+function addTitle() {
+  const titleContainer = document.querySelector(".title");
+  const title = document.createElement("h1");
+  title.textContent = "Flappy Pokemon";
+  title.className = "title";
+  titleContainer.appendChild(title);
+}
+
+function addStartBtn() {
+  const startBtn = document.createElement("button");
+  startBtn.className = "button";
+  startBtn.textContent = "START";
+
+  meunContainer.appendChild(startBtn);
+
+  startBtn.addEventListener("click", () => {
+    // Clear the existing content
+    gameContainer.style.display = "block";
+    meunContainer.style.display = "none";
+
+    // Call the new function
+    game();
+  });
+}
 
 function game() {
   //Container
+
   const container = document.getElementById("container");
   const containerHeight = 640;
   const containerWidth = 360;
@@ -28,7 +96,7 @@ function game() {
 
   //Constant number
   const jumping = 40; //pokemon jump height
-  const gravity = 0.6; //If nothing press, Pokemon fall down as gravity
+  const gravity = 0.9; //If nothing press, Pokemon fall down as gravity
   const moving = -2; //Pipe moving speed
 
   //Status
@@ -37,7 +105,7 @@ function game() {
   let downing; //Function setInterval
 
   move();
-  setInterval(createPipe, 1500);
+  setInterval(createPipe, 1800);
   requestAnimationFrame(placePipe);
 
   //Movement in game
@@ -72,13 +140,12 @@ function game() {
     //Create pipe by random height
     let randomPipe =
       containerHeight -
-      containerHeight / 3 -
+      containerHeight / 5 -
       Math.random() * (containerHeight / 2);
 
     //Pipe default position
     const pipeTop = document.createElement("div");
     pipeTop.className = "pipe";
-
     pipeTop.style.top = 0 + "px";
     pipeTop.style.left = containerWidth + "px";
     pipeTop.style.width = pipeWidth + "px";
@@ -88,7 +155,6 @@ function game() {
 
     const pipeBottom = document.createElement("div");
     pipeBottom.className = "pipe";
-
     pipeBottom.style.bottom = "0" + "px";
     pipeBottom.style.left = containerWidth + "px";
     pipeBottom.style.width = pipeWidth + "px";
@@ -136,7 +202,7 @@ function game() {
     }
 
     //Pokemon hit pipe
-    for (let i = 0; i < pipeBottomArray.length; i++) {
+    for (let i = 0; i < pipeBottomArray.length; i += 2) {
       let pipeTop = pipeTopArray[i];
       let pipeBottom = pipeBottomArray[i];
 
@@ -164,12 +230,5 @@ function game() {
     gameStatus = false;
     clearInterval(downing);
     document.body.removeEventListener("keypress", keypress);
-  }
-
-  function endGame() {
-    //Fetch'facts' API to show facts
-    //Return menu button
-    //Chose another pokemon button
-    //Resatrt with same pokemon button
   }
 }
