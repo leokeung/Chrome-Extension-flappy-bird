@@ -80,9 +80,10 @@ function game() {
 
   //Pokemon
   const pokemon = document.getElementById("pokemonImage");
-  container.appendChild(pokemon);
+  pokemon.style.position = "absolute";
   pokemon.height = containerHeight / 16;
   pokemon.width = containerWidth / 9;
+  container.appendChild(pokemon);
 
   //Pokemon default position
   pokemon.style.left = containerWidth / 8 + "px"; //pokemonX
