@@ -96,13 +96,17 @@ function game() {
 
   //Constant number
   const jumping = 40; //pokemon jump height
-  const gravity = 0.9; //If nothing press, Pokemon fall down as gravity
+  const gravity = 1; //If nothing press, Pokemon fall down as gravity
   const moving = -2; //Pipe moving speed
 
   //Status
   let gameStatus = true;
-  let score = 0;
   let downing; //Function setInterval
+
+  //Score
+  let score = 0;
+  const scoreCount = document.querySelector("#score");
+  scoreCount.textContent = score;
 
   move();
   setInterval(createPipe, 1800);
@@ -185,6 +189,9 @@ function game() {
         pipeTopArray.splice(i, 1);
         pipeBottomArray.splice(i, 1);
         i--;
+
+        score += 1;
+        scoreCount.textContent = score;
       }
 
       //Define gameover

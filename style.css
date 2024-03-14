@@ -68,3 +68,12 @@ html {
   background-color: white; /* Wait to change */
   position: absolute;
 }
+
+#score {
+  position: absolute;
+  font-size: 48px;
+  font-weight: 800;
+  left: 50%;
+  top: 20px;
+  z-index: 10;
+}
