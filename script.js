@@ -71,9 +71,8 @@ function addStartBtn() {
 
 function game() {
   //Container
-
   const container = document.getElementById("container");
-  const containerHeight = 640;
+  const containerHeight = 580;
   const containerWidth = 360;
   container.style.height = containerHeight + "px";
   container.style.width = containerWidth + "px";
@@ -91,7 +90,7 @@ function game() {
   pokemon.style.top = pokemonPositionY + "px"; //pokemonY
 
   //Pipe
-  const pipeWidth = 64;
+  const pipeWidth = 35;
   const opening = containerHeight / 4;
   let pipeTopArray = [];
   let pipeBottomArray = [];

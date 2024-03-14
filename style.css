@@ -3,9 +3,13 @@ html {
   width: 100%;
 }
 
+body {
+  margin: 0px;
+}
+
 .meunContainer {
   width: 360px;
-  height: 640px;
+  height: 580px;
   margin: auto;
 
   display: flex;
