@@ -79,7 +79,8 @@ function game() {
   container.style.width = containerWidth + "px";
 
   //Pokemon
-  const pokemon = document.getElementById("pokemon");
+  const pokemon = document.getElementById("pokemonImage");
+  container.appendChild(pokemon);
   pokemon.height = containerHeight / 16;
   pokemon.width = containerWidth / 9;
 
