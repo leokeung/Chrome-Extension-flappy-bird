@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
 function menu() {
   gameContainer.style.display = "none";
   addTitle();
+  addDescription();
+  hideLoading();
   const pokemonBallImages = document.querySelectorAll(".pokemon-ball");
   pokemonBallImages.forEach((el) => {
     el.addEventListener("click", (e) => {
@@ -14,36 +16,57 @@ function menu() {
       pokemonBallImages.forEach((el) => {
         el.removeEventListener("click", e);
       });
-
-      // Add the start button
-      addStartBtn();
     });
   });
 }
+let startBtnCreated = false;
+let changeBtnCreated = false;
 
 function fetchRandomPokemon() {
+  showLoading();
+  changeDescriptionText();
   const pokemonBallImages = document.getElementsByClassName("pokemon-ball");
   for (let i = 0; i < pokemonBallImages.length; i++) {
     pokemonBallImages[i].style.display = "none";
   }
-
   const apiUrl = "https://pokeapi.co/api/v2/pokemon/";
   const randomPokemonId = Math.floor(Math.random() * 898) + 1;
 
   fetch(apiUrl + randomPokemonId)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to fetch Pokemon.");
+      }
+      return response.json();
+    })
     .then((data) => {
-      const pokemonImage = document.createElement("img");
-      pokemonImage.id = "pokemonImage";
-      pokemonImage.src = data.sprites.front_default;
-      pokemonImage.style.display = "inline-block";
-      meunContainer.appendChild(pokemonImage);
+      const existingPokemonImage = document.getElementById("pokemonImage");
+      const newPokemonImage = document.createElement("img");
+      newPokemonImage.id = "pokemonImage";
+      newPokemonImage.src = data.sprites.front_default;
+      newPokemonImage.style.display = "inline-block";
+      if (existingPokemonImage) {
+        existingPokemonImage.parentNode.replaceChild(
+          newPokemonImage,
+          existingPokemonImage
+        );
+      } else {
+        meunContainer.appendChild(newPokemonImage);
+      }
+
+      if (!startBtnCreated) {
+        setTimeout(addStartBtn, 500);
+        choosePoken();
+        startBtnCreated = true;
+      }
+
+      hideLoading();
     })
     .catch((error) => {
       console.log("Error:", error);
+      hideLoading();
     });
 }
-
 function addTitle() {
   const titleContainer = document.querySelector(".title");
   const title = document.createElement("h1");
@@ -52,11 +75,38 @@ function addTitle() {
   titleContainer.appendChild(title);
 }
 
+function addDescription() {
+  const descriptionContainer = document.querySelector(".description");
+  const content = document.createElement("p");
+  content.textContent = "choose a Pokemon ball";
+  content.className = "description";
+  descriptionContainer.appendChild(content);
+}
+function changeDescriptionText() {
+  const description = document.querySelector(".description");
+  description.textContent = "Choose your favorite Pokemon";
+}
+function choosePoken() {
+  const meunContainer = document.getElementById("meunContainer");
+
+  if (!changeBtnCreated) {
+    const chooseBtn = document.createElement("button");
+    chooseBtn.className = "ChooseBtn";
+    meunContainer.appendChild(chooseBtn);
+    chooseBtn.id = "fetchAgain";
+
+    chooseBtn.addEventListener("click", () => {
+      fetchRandomPokemon();
+    });
+
+    changeBtnCreated = true;
+  }
+}
 function addStartBtn() {
   const startBtn = document.createElement("button");
   startBtn.className = "button";
   startBtn.textContent = "START";
-
+  startBtn.id = "fetchAgain";
   meunContainer.appendChild(startBtn);
 
   startBtn.addEventListener("click", () => {
@@ -68,7 +118,18 @@ function addStartBtn() {
     game();
   });
 }
-
+// switch
+let isMenuVisible = true;
+function toggleMenu() {
+  if (isMenuVisible) {
+    menuContainer.style.display = "none"; // Hide the menu container
+    gameContainer.style.display = "block"; // Show the game container
+  } else {
+    menuContainer.style.display = "block"; // Show the menu container
+    gameContainer.style.display = "none"; // Hide the game container
+  }
+}
+// Game function
 function game() {
   //Container
   const container = document.getElementById("container");
@@ -80,10 +141,10 @@ function game() {
   //Pokemon
   const pokemon = document.getElementById("pokemonImage");
   pokemon.style.position = "absolute";
-   pokemon.height = containerHeight / 16;
+  pokemon.height = containerHeight / 16;
   pokemon.width = containerWidth / 9;
-   container.appendChild(pokemon);
-
+  container.appendChild(pokemon);
+  pokemon.id = "fetchAgain";
   //Pokemon default position
   pokemon.style.left = containerWidth / 8 + "px"; //pokemonX
   let pokemonPositionY = containerHeight / 2;
@@ -149,7 +210,10 @@ function game() {
       Math.random() * (containerHeight / 2);
 
     //Pipe default position
+
     const pipeTop = document.createElement("div");
+    pipeTop.style.backgroundImage = "url('toppipe.png')";
+    pipeTop.style.backgroundSize = "100% 100%";
     pipeTop.className = "pipe";
     pipeTop.style.top = 0 + "px";
     pipeTop.style.left = containerWidth + "px";
@@ -159,6 +223,8 @@ function game() {
     pipeTopArray.push(pipeTop);
 
     const pipeBottom = document.createElement("div");
+    pipeBottom.style.backgroundImage = "url('bottompipe.png')";
+    pipeBottom.style.backgroundSize = "100% 100%";
     pipeBottom.className = "pipe";
     pipeBottom.style.bottom = "0" + "px";
     pipeBottom.style.left = containerWidth + "px";
@@ -238,5 +304,31 @@ function game() {
     gameStatus = false;
     clearInterval(downing);
     document.body.removeEventListener("keypress", keypress);
+
+    const endSumUpP = document.createElement("p");
+    endSumUpP.className = "endSumUpP";
+    endSumUpP.textContent = `You got ${score} score! Try again.`;
+    container.appendChild(endSumUpP);
+
+    const startBtn = document.createElement("button");
+    startBtn.className = "startBtn";
+    startBtn.textContent = "Start";
+    container.appendChild(startBtn);
+
+    startBtn.addEventListener("click", function () {
+      console.log("restart");
+      window.location.reload();
+    });
   }
+}
+
+// Loading
+function showLoading() {
+  const loading = document.getElementById("loading");
+  loading.style.display = "block";
+}
+
+function hideLoading() {
+  const loading = document.getElementById("loading");
+  loading.style.display = "none";
 }
